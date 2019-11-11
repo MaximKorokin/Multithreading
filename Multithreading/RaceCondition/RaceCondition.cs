@@ -12,7 +12,7 @@ namespace Multithreading.RaceCondition
             var finalQueue = new Queue<string>(initialQueue.Count);
             List<Thread> threads = new List<Thread>(initialQueue.Count);
 
-            foreach (var person in initialQueue)
+            for(int i = 0; i < initialQueue.Count; i++)
             {
                 threads.Add(new Thread(data =>
                 {

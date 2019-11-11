@@ -11,6 +11,9 @@ namespace Multithreading
             Console.WriteLine("*****************");
             Console.WriteLine("Race condition:");
             RaceCondition.RaceCondition.Run();
+            Console.WriteLine("*****************");
+            Console.WriteLine("Multithread prime numbers:");
+            Console.WriteLine($"Primes: {Primes.GetPrimes(11).Count}");
         }
     }
 }
