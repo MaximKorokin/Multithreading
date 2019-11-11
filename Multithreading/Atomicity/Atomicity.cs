@@ -1,19 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading;
 
-namespace Multithreading.AtomicityAndRaceCondition
+namespace Multithreading.Atomicity
 {
-    static class AtomicityAndRaceCondition
+    static class Atomicity
     {
         private static Bank bank = new Bank();
-        private static decimal defaultMoney = 1000;
+        private const decimal DefaultMoney = 1000;
 
         public static void Run()
         {
-            bank.CreateAccount("John", defaultMoney);
-            bank.CreateAccount("Alice", defaultMoney);
-            Console.WriteLine($"John has {defaultMoney} money and Alice has {defaultMoney} money.");
+            bank.CreateAccount("John", DefaultMoney);
+            bank.CreateAccount("Alice", DefaultMoney);
+            Console.WriteLine($"John has {DefaultMoney} money and Alice has {DefaultMoney} money.");
             var readThread = new Thread(ReadFromBank);
             var writeThread = new Thread(WriteToBank);
             readThread.Start();
@@ -30,9 +29,9 @@ namespace Multithreading.AtomicityAndRaceCondition
             {
                 johnMoney = bank.GetAccountMoney("John");
                 aliceMoney = bank.GetAccountMoney("Alice");
-                if (johnMoney + aliceMoney != defaultMoney * 2)
+                if (johnMoney + aliceMoney != DefaultMoney * 2)
                 {
-                    Console.WriteLine($"Race condition: John has {johnMoney} money and Alice has {aliceMoney} money.");
+                    Console.WriteLine($"Error: John has {johnMoney} money and Alice has {aliceMoney} money.");
                 }
             }
         }
