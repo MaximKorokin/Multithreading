@@ -29,10 +29,12 @@ namespace Multithreading
                                 break;
                             }
                         }
+                        // for debugging purposes
                         if (primeCandidate % 1_000_000 == 0)
                         {
                             Console.WriteLine(primeCandidate / 1_000_000);
                         }
+                        // for debugging purposes
                         if (IsPrime(primeCandidate))
                         {
                             lock (lockObject)
