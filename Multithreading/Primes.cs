@@ -4,54 +4,30 @@ using System.Threading;
 
 namespace Multithreading
 {
-    static class Primes
+    public class Primes
     {
-        public static HashSet<int> GetPrimes(int threadCount)
-        {
-            const int UpToPrimes = 1_000_000_000;
-            var primes = new HashSet<int>();
-            var currentNumber = 2;
-            var lockObject = new object();
-            List<Thread> threads = new List<Thread>(threadCount);
+        private HashSet<int> primes = new HashSet<int>();
 
-            for(int i = 0; i < threadCount; i++)
+        public HashSet<int> GetPrimes(int lowerBound, int upperBound, int threadsCount)
+        {
+            int numbersInThread = upperBound / threadsCount;
+            Thread[] threads = new Thread[threadsCount];
+
+            for (int i = 0; i < threadsCount; i++)
             {
-                threads.Add(new Thread(data =>
+                int localLowerBound = lowerBound + numbersInThread * i;
+                threads[i] = new Thread(() =>
                 {
-                    int primeCandidate = 0;
-                    while (true)
-                    {
-                        lock (lockObject)
-                        {
-                            primeCandidate = currentNumber++;
-                            if (currentNumber > UpToPrimes)
-                            {
-                                break;
-                            }
-                        }
-                        // for debugging purposes
-                        if (primeCandidate % 1_000_000 == 0)
-                        {
-                            Console.WriteLine(primeCandidate / 1_000_000);
-                        }
-                        // for debugging purposes
-                        if (IsPrime(primeCandidate))
-                        {
-                            lock (lockObject)
-                            {
-                                primes.Add(primeCandidate);
-                            }
-                        }
-                    }
-                }));
+                    FindPrimes(localLowerBound + (i > 0 ? 1 : 0), localLowerBound + numbersInThread);
+                });
             }
 
-            foreach(var thread in threads)
+            foreach (var thread in threads)
             {
                 thread.Start();
             }
 
-            foreach(var thread in threads)
+            foreach (var thread in threads)
             {
                 thread.Join();
             }
@@ -59,7 +35,21 @@ namespace Multithreading
             return primes;
         }
 
-        private static bool IsPrime(int number)
+        private void FindPrimes(int lowerBound, int upperBound)
+        {
+            for (int prime = lowerBound; prime <= upperBound; prime++)
+            {
+                if (IsPrime(prime))
+                {
+                    lock (primes)
+                    {
+                        primes.Add(prime);
+                    }
+                }
+            }
+        }
+
+        private bool IsPrime(int number)
         {
             int upToNumber = (int)Math.Sqrt(number);
             for(int i = 2; i <= upToNumber; i++)

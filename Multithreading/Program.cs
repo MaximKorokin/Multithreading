@@ -13,7 +13,7 @@ namespace Multithreading
             RaceCondition.RaceCondition.Run();
             Console.WriteLine("*****************");
             Console.WriteLine("Multithread prime numbers:");
-            Console.WriteLine($"Primes: {Primes.GetPrimes(11).Count}");
+            Console.WriteLine($"Primes: {new Primes().GetPrimes(1, 1_000_000, 11).Count}");
         }
     }
 }
